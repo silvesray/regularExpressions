@@ -7,26 +7,51 @@ Created on Tue Dec 29 17:33:36 2020
 import re
 import os
 import pandas as pd
-files = None
 
-os.chdir("F:/OpenClassRoom/regularExpression")
-with open("data.txt", 'r') as file:
-    files= file.readlines()
 
-sample = files[:5]
-pattern_name = r"[A-Za-z]+\s[A-Za-z]+\n$"
-pattern_contact = r"^[0-9]{3}([ .-]?[0-9]{2,}){2}"
-pattern_mail = r"[A-Za-z0-9]+@[A-Za-z]+"
+current_path = os.path.dirname(__file__)
+os.chdir(current_path)
 
-pattern_compile = re.compile(pattern_name)
-pattern_contact = re.compile(pattern_contact)
-pattern_mail = re.compile(pattern_mail)
+def extractInfo(filename):
+    """
+    get informations about someone according a text 
 
-names = [d for d  in files if pattern_compile.search(d)!= None]
-contacts = [d for d in files if pattern_contact.search(d)!= None]
-mails = [d for d in files if pattern_mail.search(d)!= None]
+    Parameters
+    ----------
+    filename : string
+        DESCRIPTION.
 
-df_dict = {'Names': names, 'Contacts': contacts, 'Mails': mails}
-df = pd.DataFrame.from_dict(df_dict, orient="index")
-df = df.transpose()
-print(df.head())
+    Returns
+    -------
+    dataframe.
+
+    """
+    # check if the filename is a txt extension
+    
+    dictPattern= {
+        "patName" : r"[A-Za-z]+\s[A-Za-z]+\n$",
+        "patContact" : r"^[0-9]{3}([ .-]?[0-9]{2,}){2}",
+        "patMail" : r"[A-Za-z0-9]+@[A-Za-z]+",
+        "patAd" : r"^[0-9]{2,}\s\w+\s+\w+"}
+    
+    _, ext = os.path.splitext(filename)
+    assert ext == ".txt", "The file was not a file text"
+    with open(filename, "r") as f:
+        content = f.readlines()
+            
+    name_compile = re.compile(dictPattern.get("patName"))
+    contact_compile = re.compile(dictPattern.get("patContact"))
+    mail_compile = re.compile(dictPattern.get("patMail"))
+    adress_compile = re.compile(dictPattern.get("patAd"))
+    
+    names = [d.rstrip() for d  in content if name_compile.search(d)!= None]
+    contacts = [d.rstrip() for d in content if contact_compile.search(d)!= None]
+    mails = [d.rstrip() for d in content if mail_compile.search(d)!= None]
+    adresses = [d.rstrip() for d in content if adress_compile.search(d) != None]
+    
+    
+    
+    df_dict = {'Names': names, 'Contacts': contacts, 'Mails': mails,'Adresses': adresses }
+    df = pd.DataFrame.from_dict(df_dict, orient="index")
+    df = df.transpose()
+    return df
