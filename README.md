@@ -7,6 +7,7 @@ It helps you extract informations about something, someone etc.
 
 To do something in text mining using regularExpressions, you must define a pattern, that is a specific structure of string from a dictonnary.
 For avoiding a shit explanatory about dictionary , I do some example to do this staff on data.
+
 .       - Any Character Except New Line
 \d      - Digit (0-9)
 \D      - Not a Digit (0-9)
@@ -29,5 +30,5 @@ Quantifiers:
 *       - 0 or More
 +       - 1 or More
 ?       - 0 or One
-{3}     - Exact Number
-{3,4}   - Range of Numbers (Minimum, Maximum)
+- {3}     - Exact Number
+- {3,4}   - Range of Numbers (Minimum, Maximum)
